@@ -1,0 +1,52 @@
+import java.util.*;
+
+class Solution {
+
+    public List<List<String>> suggestedProducts(
+            String[] products, String searchWord) {
+
+        Arrays.sort(products);
+
+        List<List<String>> result = new ArrayList<>();
+
+        String prefix = "";
+
+        for (char c : searchWord.toCharArray()) {
+
+            prefix += c;
+
+            List<String> suggestions = new ArrayList<>();
+
+            int left = 0;
+            int right = products.length - 1;
+
+            // Find first product >= prefix
+            while (left <= right) {
+
+                int mid = left + (right - left) / 2;
+
+                if (products[mid].compareTo(prefix) < 0) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+
+            // Take maximum 3 matching products
+            for (int i = left;
+                 i < products.length && suggestions.size() < 3;
+                 i++) {
+
+                if (products[i].startsWith(prefix)) {
+                    suggestions.add(products[i]);
+                } else {
+                    break;
+                }
+            }
+
+            result.add(suggestions);
+        }
+
+        return result;
+    }
+}
